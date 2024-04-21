@@ -24,7 +24,7 @@
     "resolveJsonModule": true,
     "rootDir": "",
     "paths": {
-      "@type/*": ["./src/types/*"],
+      "@type/*": ["src/utils/types/*"],
       "@server/*": ["./src/server/*"],
       "@/*": ["./src/*"]
     }

@@ -1,5 +1,5 @@
 import { ApiError } from '@/error';
-import { SafeResult } from '@type/server';
+import { SafeResult } from '@/utils/types/server';
 
 export function unwrapResult<T>(result: SafeResult<T>): T {
   if (!result.error) {

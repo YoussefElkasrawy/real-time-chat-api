@@ -9,7 +9,7 @@ import { NextFunction, Request, Response, Express, ErrorRequestHandler } from 'e
 import { ApiError, HttpStatus } from './error';
 import { wrapResponse } from './utils/response';
 import Config from './config';
-import { ResponseTemplate } from '@type/server';
+import { ResponseTemplate } from '@/utils/types/server';
 import { initSocket } from './websocket/sockets';
 import { Server as ServerIo } from 'socket.io';
 import authRoute from './routes/authRoute';
