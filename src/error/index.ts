@@ -52,16 +52,8 @@ export class ApiError extends Error {
     this.status = 'error';
   }
 
-  static invalidLanguage(): ApiError {
-    return new ApiError('Invalid language.', HttpStatus.BadRequest);
-  }
-
-  static invalidEmailCredentials(): ApiError {
-    return new ApiError('Invalid email or password.', HttpStatus.BadRequest);
-  }
-
-  static invalidPhoneCredentials(): ApiError {
-    return new ApiError('Invalid phone number or password.', HttpStatus.BadRequest);
+  static invalidCredentials(): ApiError {
+    return new ApiError('Invalid username or password.', HttpStatus.BadRequest);
   }
 
   static unauthorized(): ApiError {
@@ -76,127 +68,7 @@ export class ApiError extends Error {
     return new ApiError('Invalid token format.', HttpStatus.BadRequest);
   }
 
-  static invalidOTP(): ApiError {
-    return new ApiError('The provided OTP is not valid or has expired.', HttpStatus.BadRequest);
-  }
-
   static duplicate(name: string): ApiError {
     return new ApiError(`${name} is already exists.`, HttpStatus.BadRequest);
-  }
-
-  static notAvailableBrand(): ApiError {
-    return new ApiError('Brand not available.', HttpStatus.BadRequest);
-  }
-
-  static invalidBrandId(): ApiError {
-    return new ApiError('Invalid brand id.', HttpStatus.BadRequest);
-  }
-
-  static invalidBranchId(): ApiError {
-    return new ApiError('Invalid branch id.', HttpStatus.BadRequest);
-  }
-
-  static invalidBrandServiceId(): ApiError {
-    return new ApiError('Invalid service id.', HttpStatus.BadRequest);
-  }
-
-  static invalidBrandCategoryId(): ApiError {
-    return new ApiError('Invalid category id.', HttpStatus.BadRequest);
-  }
-
-  static invalidMediaId(): ApiError {
-    return new ApiError('Invalid media id.', HttpStatus.BadRequest);
-  }
-
-  static invalidTicketId(): ApiError {
-    return new ApiError('Invalid ticket id.', HttpStatus.BadRequest);
-  }
-
-  static invalidChatId(): ApiError {
-    return new ApiError('Invalid chat id.', HttpStatus.BadRequest);
-  }
-
-  static invalidMainCategoryId(): ApiError {
-    return new ApiError('Invalid main category id.', HttpStatus.BadRequest);
-  }
-
-  static invalidBannerId(): ApiError {
-    return new ApiError('Invalid banner id.', HttpStatus.BadRequest);
-  }
-
-  static invalidCouponeId(): ApiError {
-    return new ApiError('Invalid coupone id.', HttpStatus.BadRequest);
-  }
-
-  static invalidUserId(): ApiError {
-    return new ApiError('Invalid user id.', HttpStatus.BadRequest);
-  }
-
-  static invalidAdminId(): ApiError {
-    return new ApiError('Invalid admin id.', HttpStatus.BadRequest);
-  }
-
-  static invalidProviderId(): ApiError {
-    return new ApiError('Invalid provider id.', HttpStatus.BadRequest);
-  }
-
-  static invalidAvailabilityId(): ApiError {
-    return new ApiError('Invalid availability id.', HttpStatus.BadRequest);
-  }
-
-  static notFoundBrand(): ApiError {
-    return new ApiError('Brand not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundBranch(): ApiError {
-    return new ApiError('Branch not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundBrandService(): ApiError {
-    return new ApiError('Service not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundBrandCategory(): ApiError {
-    return new ApiError('Category not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundMedia(): ApiError {
-    return new ApiError('Media not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundTicket(): ApiError {
-    return new ApiError('Ticket not found.', HttpStatus.NotFound);
-  }
-
-  static notFounChat(): ApiError {
-    return new ApiError('Chat not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundMainCategory(): ApiError {
-    return new ApiError('MainCategory not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundBanner(): ApiError {
-    return new ApiError('Banner not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundCoupone(): ApiError {
-    return new ApiError('Coupone not found.', HttpStatus.BadRequest);
-  }
-
-  static notFoundUser(): ApiError {
-    return new ApiError('User not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundAdmin(): ApiError {
-    return new ApiError('Admin not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundProvider(): ApiError {
-    return new ApiError('Provider not found.', HttpStatus.NotFound);
-  }
-
-  static notFoundBooking(): ApiError {
-    return new ApiError('Booking not found.', HttpStatus.NotFound);
   }
 }

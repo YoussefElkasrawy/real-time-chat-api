@@ -5,14 +5,14 @@ import cors from 'cors';
 import './config/init';
 import { initDB } from './database/init';
 import compression from 'compression';
-import { NextFunction, Request, Response, Express ,ErrorRequestHandler} from 'express';
+import { NextFunction, Request, Response, Express, ErrorRequestHandler } from 'express';
 import { ApiError, HttpStatus } from './error';
 import { wrapResponse } from './utils/response';
 import Config from './config';
 import { ResponseTemplate } from '@type/server';
 import { initSocket } from './websocket/sockets';
 import { Server as ServerIo } from 'socket.io';
-
+import authRoute from './routes/authRoute';
 function _404Middleware(app: Express) {
   app.use(() => {
     throw new ApiError('EndPoint Not Found!', HttpStatus.NotFound);
@@ -34,7 +34,6 @@ function errorMiddleware(app: Express) {
   app.use(errorHandler);
 }
 
-
 function initMiddleware(app: express.Express) {
   app.use(cors());
   app.use(express.json());
@@ -55,6 +54,7 @@ export function createServer(): express.Express {
 
   initSocket(io);
   initMiddleware(app);
+  app.use('/api/v1/auth', authRoute);
   _404Middleware(app);
   errorMiddleware(app);
   server.listen(Config.PORT, () => {
