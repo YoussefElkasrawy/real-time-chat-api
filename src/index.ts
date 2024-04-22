@@ -13,6 +13,7 @@ import { ResponseTemplate } from '@/utils/types/server';
 import { initSocket } from './websocket/sockets';
 import { Server as ServerIo } from 'socket.io';
 import authRoute from './routes/authRoute';
+
 function _404Middleware(app: Express) {
   app.use(() => {
     throw new ApiError('EndPoint Not Found!', HttpStatus.NotFound);
