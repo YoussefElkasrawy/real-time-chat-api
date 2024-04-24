@@ -1,6 +1,5 @@
 import UserModel from '@/database/models/user';
 import { ApiError, HttpStatus } from '@/error';
-import { wrapResponse } from '@/utils/response';
 import {
   validateLoginDetails,
   validateSignupDetails,
@@ -30,10 +29,10 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) throw ApiError.invalidCredentials();
 
-    const result = wrapResponse({
+    const result = {
       username: username,
       accessToken: createToken({ id: user._id }, Config.ACCESS_TOKEN_KEY, Config.ACCESS_TOKEN_EXP),
-    });
+    };
     res.JSON(HttpStatus.Ok, result);
   } catch (error) {
     next(error);
@@ -65,14 +64,14 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
     await newUser.save();
 
-    const result = wrapResponse({
+    const result = {
       username: newUser.username,
       accessToken: createToken(
         { id: newUser._id },
         Config.ACCESS_TOKEN_KEY,
         Config.ACCESS_TOKEN_EXP,
       ),
-    });
+    };
     res.JSON(HttpStatus.Ok, result);
   } catch (error) {
     next(error);
@@ -115,7 +114,7 @@ export async function updatePassword(req: CustomRequest, res: Response, next: Ne
 
     await user.save();
 
-    const result = wrapResponse('Password updated successfully');
+    const result = 'Password updated successfully';
     res.JSON(HttpStatus.Ok, result);
   } catch (error) {
     next(error);
