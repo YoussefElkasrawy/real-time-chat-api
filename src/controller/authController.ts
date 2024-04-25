@@ -9,6 +9,7 @@ import { Response, Request, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { createToken } from '@/utils/token';
 import Config from '@/config';
+import { wrapResponse } from '@/utils/response';
 
 interface CustomRequest extends Request {
   userId?: string;
@@ -33,7 +34,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       username: username,
       accessToken: createToken({ id: user._id }, Config.ACCESS_TOKEN_KEY, Config.ACCESS_TOKEN_EXP),
     };
-    res.JSON(HttpStatus.Ok, result);
+    res.JSON(HttpStatus.Ok, wrapResponse(result));
   } catch (error) {
     next(error);
   }
@@ -72,7 +73,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
         Config.ACCESS_TOKEN_EXP,
       ),
     };
-    res.JSON(HttpStatus.Ok, result);
+    res.JSON(HttpStatus.Ok, wrapResponse(result));
   } catch (error) {
     next(error);
   }
@@ -115,7 +116,7 @@ export async function updatePassword(req: CustomRequest, res: Response, next: Ne
     await user.save();
 
     const result = 'Password updated successfully';
-    res.JSON(HttpStatus.Ok, result);
+    res.JSON(HttpStatus.Ok, wrapResponse(result));
   } catch (error) {
     next(error);
   }
