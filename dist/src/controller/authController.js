@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePassword = exports.signup = exports.login = void 0;
 const user_1 = __importDefault(require("../database/models/user"));
 const error_1 = require("../error");
-const response_1 = require("../utils/response");
 const authValidation_1 = require("../utils/validation/authValidation");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const token_1 = require("../utils/token");
@@ -24,10 +23,10 @@ async function login(req, res, next) {
         const isPasswordCorrect = await bcrypt_1.default.compare(password, user.password);
         if (!isPasswordCorrect)
             throw error_1.ApiError.invalidCredentials();
-        const result = (0, response_1.wrapResponse)({
+        const result = {
             username: username,
             accessToken: (0, token_1.createToken)({ id: user._id }, config_1.default.ACCESS_TOKEN_KEY, config_1.default.ACCESS_TOKEN_EXP),
-        });
+        };
         res.JSON(error_1.HttpStatus.Ok, result);
     }
     catch (error) {
@@ -54,10 +53,10 @@ async function signup(req, res, next) {
             password: hashedPassword,
         });
         await newUser.save();
-        const result = (0, response_1.wrapResponse)({
+        const result = {
             username: newUser.username,
             accessToken: (0, token_1.createToken)({ id: newUser._id }, config_1.default.ACCESS_TOKEN_KEY, config_1.default.ACCESS_TOKEN_EXP),
-        });
+        };
         res.JSON(error_1.HttpStatus.Ok, result);
     }
     catch (error) {
@@ -88,7 +87,7 @@ async function updatePassword(req, res, next) {
         const hashedNewPassword = await bcrypt_1.default.hash(newPassword, 10);
         user.password = hashedNewPassword;
         await user.save();
-        const result = (0, response_1.wrapResponse)('Password updated successfully');
+        const result = 'Password updated successfully';
         res.JSON(error_1.HttpStatus.Ok, result);
     }
     catch (error) {

@@ -7,7 +7,6 @@ import { initDB } from './database/init';
 import compression from 'compression';
 import { NextFunction, Request, Response, Express, ErrorRequestHandler } from 'express';
 import { ApiError, HttpStatus } from './error';
-import { wrapResponse } from './utils/response';
 import Config from './config';
 import { ResponseTemplate } from '@/utils/types/server';
 import { initSocket } from './websocket/sockets';
@@ -41,7 +40,7 @@ function initMiddleware(app: express.Express) {
   app.use(compression());
   app.use((_: Request, res: Response, next: NextFunction) => {
     res.JSON = (code: HttpStatus, data?: unknown) => {
-      res.status(code).json(wrapResponse(data));
+      res.status(code).json(data);
     };
     next();
   });

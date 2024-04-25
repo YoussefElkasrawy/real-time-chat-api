@@ -34,7 +34,6 @@ require("./config/init");
 const init_1 = require("./database/init");
 const compression_1 = __importDefault(require("compression"));
 const error_1 = require("./error");
-const response_1 = require("./utils/response");
 const config_1 = __importDefault(require("./config"));
 const sockets_1 = require("./websocket/sockets");
 const socket_io_1 = require("socket.io");
@@ -64,7 +63,7 @@ function initMiddleware(app) {
     app.use((0, compression_1.default)());
     app.use((_, res, next) => {
         res.JSON = (code, data) => {
-            res.status(code).json((0, response_1.wrapResponse)(data));
+            res.status(code).json(data);
         };
         next();
     });
