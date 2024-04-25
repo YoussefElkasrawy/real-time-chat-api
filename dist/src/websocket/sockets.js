@@ -25,19 +25,19 @@ async function initSocket(io) {
             socket.disconnect();
             return;
         }
-        const id = await (0, token_1.verifyToken)(token, config_1.default.ACCESS_TOKEN_KEY);
+        const id = await (0, token_1.verifyToken)(token, config_1.default.ACCESS_TOKEN_KEY).id;
         const user = await user_1.default.findById(id);
         if (!user) {
             socketError(socket, 'You are not authorized to do that.');
             socket.disconnect();
             return;
         }
-        emitEvent(socket, SocketEvent.USER_ONLINE, user.username);
+        emitEvent(socket, SocketEvent.USER_ONLINE, `${user.username} join chat`);
         socket.on('new_message', message => {
-            emitEvent(socket, SocketEvent.NEW_MESSAGE, message);
+            emitEvent(socket, SocketEvent.NEW_MESSAGE, `${user.username}: ${message}`);
         });
         socket.on('disconnect', () => {
-            emitEvent(socket, SocketEvent.USER_OFLINE, user.username);
+            emitEvent(socket, SocketEvent.USER_OFLINE, `${user.username} left chat`);
         });
     });
 }

@@ -23,7 +23,7 @@ export async function initSocket(io: Server) {
       return;
     }
 
-    const id = await verifyToken(token, Config.ACCESS_TOKEN_KEY);
+    const id = await verifyToken(token, Config.ACCESS_TOKEN_KEY).id;
     const user = await UserModel.findById(id);
     if (!user) {
       socketError(socket, 'You are not authorized to do that.');
@@ -31,14 +31,14 @@ export async function initSocket(io: Server) {
       return;
     }
 
-    emitEvent(socket, SocketEvent.USER_ONLINE, user.username);
+    emitEvent(socket, SocketEvent.USER_ONLINE, `${user.username} join chat`);
 
     socket.on('new_message', message => {
-      emitEvent(socket, SocketEvent.NEW_MESSAGE, message);
+      emitEvent(socket, SocketEvent.NEW_MESSAGE, `${user.username}: ${message}`);
     });
 
     socket.on('disconnect', () => {
-      emitEvent(socket, SocketEvent.USER_OFLINE, user.username);
+      emitEvent(socket, SocketEvent.USER_OFLINE, `${user.username} left chat`);
     });
   });
 }
