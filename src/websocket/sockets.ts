@@ -2,7 +2,6 @@ import Config from '@/config';
 import UserModel from '@/database/models/user';
 import { verifyToken } from '@/utils/token';
 import { Server, Socket } from 'socket.io';
-import AES, { randomBytes } from 'crypto'; // Import crypto modules for encryption
 
 export enum SocketEvent {
   ERROR = 'error',
@@ -32,28 +31,16 @@ export async function initSocket(io: Server) {
       return;
     }
 
-    const encryptedOnlineMessage = encryptMessage(`${user.username} join chat`); // Encrypt join message
-    emitEvent(socket, SocketEvent.USER_ONLINE, encryptedOnlineMessage);
+    emitEvent(socket, SocketEvent.USER_ONLINE, `${user.username} join chat`);
 
     socket.on('new_message', message => {
-      const encryptedMessage = encryptMessage(`${user.username}: ${message}`); // Encrypt new message
-      emitEvent(socket, SocketEvent.NEW_MESSAGE, encryptedMessage);
+      emitEvent(socket, SocketEvent.NEW_MESSAGE, message);
     });
 
     socket.on('disconnect', () => {
-      const encryptedOfflineMessage = encryptMessage(`${user.username} left chat`); // Encrypt leave message
-      emitEvent(socket, SocketEvent.USER_OFFLINE, encryptedOfflineMessage);
+      emitEvent(socket, SocketEvent.USER_OFFLINE, `${user.username} left chat`);
     });
   });
-}
-
-function encryptMessage(message: string): string {
-  const key = randomBytes(32); // Generate a random encryption key
-  const iv = randomBytes(16); // Generate a random initialization vector
-  const cipher = AES.createCipheriv('aes-256-ctr', key, iv); // Create a cipher using AES-256-CTR algorithm
-  let encryptedMessage = cipher.update(message, 'utf-8', 'hex'); // Encrypt the message
-  encryptedMessage += cipher.final('hex');
-  return encryptedMessage;
 }
 
 export function emitEvent(socket: any, event: SocketEvent, payload?: unknown) {
