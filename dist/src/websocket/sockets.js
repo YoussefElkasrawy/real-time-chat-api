@@ -13,6 +13,7 @@ var SocketEvent;
     SocketEvent["NEW_MESSAGE"] = "new_message";
     SocketEvent["USER_ONLINE"] = "user_online";
     SocketEvent["USER_OFFLINE"] = "user_offline";
+    SocketEvent["NEW_AUDIO_MESSAGE"] = "new_audio_message";
 })(SocketEvent || (exports.SocketEvent = SocketEvent = {}));
 function socketError(socket, error) {
     socket.emit(SocketEvent.ERROR, error);
@@ -35,6 +36,9 @@ async function initSocket(io) {
         emitEvent(socket, SocketEvent.USER_ONLINE, `${user.username} join chat`);
         socket.on('new_message', message => {
             emitEvent(socket, SocketEvent.NEW_MESSAGE, message);
+        });
+        socket.on('new_audio_message', message => {
+            emitEvent(socket, SocketEvent.NEW_AUDIO_MESSAGE, message);
         });
         socket.on('disconnect', () => {
             emitEvent(socket, SocketEvent.USER_OFFLINE, `${user.username} left chat`);

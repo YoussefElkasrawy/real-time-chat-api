@@ -8,6 +8,7 @@ export enum SocketEvent {
   NEW_MESSAGE = 'new_message',
   USER_ONLINE = 'user_online',
   USER_OFFLINE = 'user_offline',
+  NEW_AUDIO_MESSAGE = 'new_audio_message',
 }
 
 function socketError(socket: Socket, error: string) {
@@ -35,6 +36,10 @@ export async function initSocket(io: Server) {
 
     socket.on('new_message', message => {
       emitEvent(socket, SocketEvent.NEW_MESSAGE, message);
+    });
+
+    socket.on('new_audio_message', message => {
+      emitEvent(socket, SocketEvent.NEW_AUDIO_MESSAGE, message);
     });
 
     socket.on('disconnect', () => {
