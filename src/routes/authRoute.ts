@@ -6,7 +6,7 @@ import { rateLimit } from 'express-rate-limit';
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 50, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  limit: 15, // Limit each IP to 15 requests per `window` (here, per 15 minutes).
   standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
   handler: (_, __, next, options) => next(new ApiError(options.message, options.statusCode)),
@@ -15,7 +15,7 @@ const limiter = rateLimit({
 const router = Router();
 
 router.post('/login', limiter, login);
-router.post('/signup', signup);
-router.post('/update-password', isAuth, updatePassword);
+router.post('/signup', limiter, signup);
+router.post('/update-password', limiter, isAuth, updatePassword);
 
 export default router;
