@@ -38,6 +38,7 @@ const config_1 = __importDefault(require("./config"));
 const sockets_1 = require("./websocket/sockets");
 const socket_io_1 = require("socket.io");
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 function _404Middleware(app) {
     app.use(() => {
         throw new error_1.ApiError('EndPoint Not Found!', error_1.HttpStatus.NotFound);
@@ -60,6 +61,7 @@ function errorMiddleware(app) {
 function initMiddleware(app) {
     app.use((0, cors_1.default)());
     app.use(express_1.default.json());
+    app.use((0, express_mongo_sanitize_1.default)({ replaceWith: '' })); // nosql i
     app.use((0, compression_1.default)());
     app.use((_, res, next) => {
         res.JSON = (code, data) => {

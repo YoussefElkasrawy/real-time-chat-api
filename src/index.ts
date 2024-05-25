@@ -12,6 +12,7 @@ import { ResponseTemplate } from '@/utils/types/server';
 import { initSocket } from './websocket/sockets';
 import { Server as ServerIo } from 'socket.io';
 import authRoute from './routes/authRoute';
+import mongosanitize from 'express-mongo-sanitize';
 
 function _404Middleware(app: Express) {
   app.use(() => {
@@ -37,6 +38,7 @@ function errorMiddleware(app: Express) {
 function initMiddleware(app: express.Express) {
   app.use(cors());
   app.use(express.json());
+  app.use(mongosanitize({replaceWith:''})); // nosql i
   app.use(compression());
   app.use((_: Request, res: Response, next: NextFunction) => {
     res.JSON = (code: HttpStatus, data?: unknown) => {
