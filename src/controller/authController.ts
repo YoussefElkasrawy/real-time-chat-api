@@ -8,8 +8,8 @@ import {
 import { Response, Request, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { createToken } from '@/utils/token';
-import Config from '@/config';
 import { wrapResponse } from '@/utils/response';
+import Config from '@/config/env';
 
 interface CustomRequest extends Request {
   userId?: string;

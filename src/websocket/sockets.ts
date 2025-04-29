@@ -1,4 +1,4 @@
-import Config from '@/config';
+import Config from '@/config/env';
 import UserModel from '@/database/models/user';
 import { verifyToken } from '@/utils/token';
 import { Server, Socket } from 'socket.io';

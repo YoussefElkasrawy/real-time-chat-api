@@ -1,4 +1,4 @@
-import Config from '@/config';
+import Config from '@/config/env';
 import { ApiError } from '@/error';
 import { verifyToken } from '@/utils/token';
 import { NextFunction, Request, Response } from 'express';
