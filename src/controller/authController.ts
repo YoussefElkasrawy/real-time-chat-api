@@ -10,10 +10,8 @@ import bcrypt from 'bcrypt';
 import { createToken } from '@/utils/token';
 import { wrapResponse } from '@/utils/response';
 import Config from '@/config/env';
-
-interface CustomRequest extends Request {
-  userId?: string;
-}
+import { CustomRequest } from '@/middlwares/isAuth';
+import { cacheUser } from '@/cache/user.cache';
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
@@ -26,6 +24,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
     const user = await UserModel.findOne({ username });
     if (!user) throw ApiError.invalidCredentials();
+
+    await cacheUser(user);
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) throw ApiError.invalidCredentials();
@@ -65,6 +65,8 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
     await newUser.save();
 
+    await cacheUser(newUser);
+
     const result = {
       username: newUser.username,
       accessToken: createToken(
@@ -81,6 +83,8 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
 export async function updatePassword(req: CustomRequest, res: Response, next: NextFunction) {
   try {
+    const user = req.user!;
+
     const { oldPassword, newPassword, confNewPassword } = req.body;
 
     const validation = validateUpdatePasswordDetails(
@@ -91,9 +95,6 @@ export async function updatePassword(req: CustomRequest, res: Response, next: Ne
     if (validation) {
       throw new ApiError(validation.message, HttpStatus.BadRequest);
     }
-
-    const user = await UserModel.findById(req.userId);
-    if (!user) throw ApiError.invalidToken();
 
     const isOldPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
     if (!isOldPasswordCorrect)
@@ -115,7 +116,10 @@ export async function updatePassword(req: CustomRequest, res: Response, next: Ne
 
     await user.save();
 
+    await cacheUser(user);
+
     const result = 'Password updated successfully';
+
     res.JSON(HttpStatus.Ok, wrapResponse(result));
   } catch (error) {
     next(error);

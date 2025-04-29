@@ -15,6 +15,7 @@ import { logger } from './middlwares/logger';
 import errorMiddleware from './middlwares/error';
 import _404Middleware from './middlwares/404';
 import { log } from './log';
+import { initCacheDB } from './cache/init';
 
 function initMiddleware(app: express.Express) {
   app.use(cors());
@@ -61,6 +62,7 @@ export function createServer(): express.Express {
 
 async function main() {
   await initDB();
+  await initCacheDB();
   createServer();
 }
 

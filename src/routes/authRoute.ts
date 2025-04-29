@@ -16,6 +16,6 @@ const router = Router();
 
 router.post('/login', limiter, login);
 router.post('/signup', limiter, signup);
-router.post('/update-password', limiter, isAuth, updatePassword);
+router.put('/update-password', limiter, isAuth, updatePassword);
 
 export default router;
