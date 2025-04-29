@@ -2,17 +2,6 @@ import Config, { Env } from '@/config/env';
 import { logRequest, logResponse } from '@/log';
 import express from 'express';
 
-/**
- * Middleware function to log HTTP requests and responses.
- *
- * @param app - The Express application instance.
- *
- * This middleware logs the HTTP method, request path, client IP address (or '[RESTRICTED]' in non-production environments),
- * and user-agent of incoming requests. It also logs the HTTP method, request path, response status code, and response time
- * in milliseconds for outgoing responses.
- *
- * The logging functions `logRequest` and `logResponse` are used to record the relevant information.
- */
 export function logger(app: express.Express) {
   app.use((req, res, next) => {
     const end = res.end;

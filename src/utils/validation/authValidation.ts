@@ -1,8 +1,8 @@
 import Joi from 'joi';
 
 const loginSchema = Joi.object({
-  username: Joi.string().trim().min(1).required(),
-  password: Joi.string().trim().min(1).required(),
+  username: Joi.string().min(3).max(30).required(),
+  password: Joi.string().min(3).max(30).required(),
 });
 
 const signupSchema = Joi.object({
@@ -17,7 +17,7 @@ const signupSchema = Joi.object({
 });
 
 const updatePasswordSchema = Joi.object({
-  oldPassword: Joi.string().trim().min(1).required(),
+  oldPassword: Joi.string().min(3).max(30).required(),
   newPassword: Joi.string()
     .min(8)
     .regex(/[A-Z]/, 'at least one uppercase letter')
