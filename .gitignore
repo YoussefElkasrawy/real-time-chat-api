@@ -1,5 +1,6 @@
 node_modules/
 .env
+env
 logs
 */*.log
 *.log
@@ -10,3 +11,9 @@ scripts
 uploads
 scripts/
 push.sh
+tmp
+deprecated.txt
+create-admin.js
+.dist
+dist/
+dist
