@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.emitEvent = exports.initSocket = exports.SocketEvent = void 0;
-const config_1 = __importDefault(require("../config"));
+const env_1 = __importDefault(require("../config/env"));
 const user_1 = __importDefault(require("../database/models/user"));
 const token_1 = require("../utils/token");
 var SocketEvent;
@@ -26,7 +26,7 @@ async function initSocket(io) {
             socket.disconnect();
             return;
         }
-        const id = await (0, token_1.verifyToken)(token, config_1.default.ACCESS_TOKEN_KEY).id;
+        const id = await (0, token_1.verifyToken)(token, env_1.default.ACCESS_TOKEN_KEY).id;
         const user = await user_1.default.findById(id);
         if (!user) {
             socketError(socket, 'You are not authorized to do that.');

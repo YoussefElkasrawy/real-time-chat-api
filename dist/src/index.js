@@ -33,35 +33,20 @@ const cors_1 = __importDefault(require("cors"));
 require("./config/init");
 const init_1 = require("./database/init");
 const compression_1 = __importDefault(require("compression"));
-const error_1 = require("./error");
-const config_1 = __importDefault(require("./config"));
+const env_1 = __importDefault(require("./config/env"));
 const sockets_1 = require("./websocket/sockets");
 const socket_io_1 = require("socket.io");
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
-function _404Middleware(app) {
-    app.use(() => {
-        throw new error_1.ApiError('EndPoint Not Found!', error_1.HttpStatus.NotFound);
-    });
-}
-function errorMiddleware(app) {
-    const errorHandler = async (err, _, res, __) => {
-        let code = err.code || 500;
-        const responseError = {
-            status: 'error',
-            error: {
-                code: code,
-                message: err.message,
-            },
-        };
-        res.status(code).json(responseError);
-    };
-    app.use(errorHandler);
-}
+const logger_1 = require("./middlwares/logger");
+const error_1 = __importDefault(require("./middlwares/error"));
+const _404_1 = __importDefault(require("./middlwares/404"));
+const log_1 = require("./log");
+const init_2 = require("./cache/init");
 function initMiddleware(app) {
     app.use((0, cors_1.default)());
     app.use(express_1.default.json());
-    app.use((0, express_mongo_sanitize_1.default)({ replaceWith: '' })); // nosql i
+    app.use((0, express_mongo_sanitize_1.default)({ replaceWith: '' }));
     app.use((0, compression_1.default)());
     app.use((_, res, next) => {
         res.JSON = (code, data) => {
@@ -69,6 +54,7 @@ function initMiddleware(app) {
         };
         next();
     });
+    (0, logger_1.logger)(app);
 }
 function createServer() {
     const app = (0, express_1.default)();
@@ -78,18 +64,30 @@ function createServer() {
     (0, sockets_1.initSocket)(io);
     initMiddleware(app);
     app.use('/api/v1/auth', authRoute_1.default);
-    _404Middleware(app);
-    errorMiddleware(app);
-    server.listen(config_1.default.PORT, () => {
-        const address = server.address();
-        console.log(`app listen on [${address.address}]:${address.port}`);
+    (0, _404_1.default)(app);
+    (0, error_1.default)(app);
+    server
+        .listen(env_1.default.PORT, () => {
+        log_1.log.info(`Server created and listening on Port: ${env_1.default.PORT}`);
+    })
+        .on('error', error => {
+        log_1.log.error(`Error starting server: ${error}`);
     });
     return app;
 }
 exports.createServer = createServer;
 async function main() {
     await (0, init_1.initDB)();
+    await (0, init_2.initCacheDB)();
     createServer();
 }
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+    log_1.log.error(err);
+});
+// Handle unhandled rejections
+process.on('unhandledRejection', reason => {
+    log_1.log.error(reason);
+});
 main();
 //# sourceMappingURL=index.js.map

@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUpdatePasswordDetails = exports.validateSignupDetails = exports.validateLoginDetails = void 0;
 const joi_1 = __importDefault(require("joi"));
 const loginSchema = joi_1.default.object({
-    username: joi_1.default.string().trim().min(1).required(),
-    password: joi_1.default.string().trim().min(1).required(),
+    username: joi_1.default.string().min(3).max(30).required(),
+    password: joi_1.default.string().min(3).max(30).required(),
 });
 const signupSchema = joi_1.default.object({
     username: joi_1.default.string().min(3).max(30).required(),
@@ -20,7 +20,7 @@ const signupSchema = joi_1.default.object({
         .required(),
 });
 const updatePasswordSchema = joi_1.default.object({
-    oldPassword: joi_1.default.string().trim().min(1).required(),
+    oldPassword: joi_1.default.string().min(3).max(30).required(),
     newPassword: joi_1.default.string()
         .min(8)
         .regex(/[A-Z]/, 'at least one uppercase letter')

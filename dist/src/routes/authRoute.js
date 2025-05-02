@@ -15,6 +15,6 @@ const limiter = (0, express_rate_limit_1.rateLimit)({
 const router = (0, express_1.Router)();
 router.post('/login', limiter, authController_1.login);
 router.post('/signup', limiter, authController_1.signup);
-router.post('/update-password', limiter, isAuth_1.isAuth, authController_1.updatePassword);
+router.put('/update-password', limiter, isAuth_1.isAuth, authController_1.updatePassword);
 exports.default = router;
 //# sourceMappingURL=authRoute.js.map

@@ -2,7 +2,7 @@ import { log } from '@/log';
 import Redis from 'ioredis';
 
 export const redisClient = new Redis({
-  host: '127.0.0.1',
+  host: 'redis',
   port: 6379,
   password: undefined,
   lazyConnect: true, // Prevent auto-connect

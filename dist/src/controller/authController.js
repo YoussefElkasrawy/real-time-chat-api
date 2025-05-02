@@ -9,8 +9,9 @@ const error_1 = require("../error");
 const authValidation_1 = require("../utils/validation/authValidation");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const token_1 = require("../utils/token");
-const config_1 = __importDefault(require("../config"));
 const response_1 = require("../utils/response");
+const env_1 = __importDefault(require("../config/env"));
+const user_cache_1 = require("../cache/user.cache");
 async function login(req, res, next) {
     try {
         const { username, password } = req.body;
@@ -21,12 +22,13 @@ async function login(req, res, next) {
         const user = await user_1.default.findOne({ username });
         if (!user)
             throw error_1.ApiError.invalidCredentials();
+        await (0, user_cache_1.cacheUser)(user);
         const isPasswordCorrect = await bcrypt_1.default.compare(password, user.password);
         if (!isPasswordCorrect)
             throw error_1.ApiError.invalidCredentials();
         const result = {
             username: username,
-            accessToken: (0, token_1.createToken)({ id: user._id }, config_1.default.ACCESS_TOKEN_KEY, config_1.default.ACCESS_TOKEN_EXP),
+            accessToken: (0, token_1.createToken)({ id: user._id }, env_1.default.ACCESS_TOKEN_KEY, env_1.default.ACCESS_TOKEN_EXP),
         };
         res.JSON(error_1.HttpStatus.Ok, (0, response_1.wrapResponse)(result));
     }
@@ -54,9 +56,10 @@ async function signup(req, res, next) {
             password: hashedPassword,
         });
         await newUser.save();
+        await (0, user_cache_1.cacheUser)(newUser);
         const result = {
             username: newUser.username,
-            accessToken: (0, token_1.createToken)({ id: newUser._id }, config_1.default.ACCESS_TOKEN_KEY, config_1.default.ACCESS_TOKEN_EXP),
+            accessToken: (0, token_1.createToken)({ id: newUser._id }, env_1.default.ACCESS_TOKEN_KEY, env_1.default.ACCESS_TOKEN_EXP),
         };
         res.JSON(error_1.HttpStatus.Ok, (0, response_1.wrapResponse)(result));
     }
@@ -67,14 +70,12 @@ async function signup(req, res, next) {
 exports.signup = signup;
 async function updatePassword(req, res, next) {
     try {
+        const user = req.user;
         const { oldPassword, newPassword, confNewPassword } = req.body;
         const validation = (0, authValidation_1.validateUpdatePasswordDetails)(oldPassword, newPassword, confNewPassword).error;
         if (validation) {
             throw new error_1.ApiError(validation.message, error_1.HttpStatus.BadRequest);
         }
-        const user = await user_1.default.findById(req.userId);
-        if (!user)
-            throw error_1.ApiError.invalidToken();
         const isOldPasswordCorrect = await bcrypt_1.default.compare(oldPassword, user.password);
         if (!isOldPasswordCorrect)
             throw new error_1.ApiError('Old password is incorrect.', error_1.HttpStatus.BadRequest);
@@ -88,6 +89,7 @@ async function updatePassword(req, res, next) {
         const hashedNewPassword = await bcrypt_1.default.hash(newPassword, 10);
         user.password = hashedNewPassword;
         await user.save();
+        await (0, user_cache_1.cacheUser)(user);
         const result = 'Password updated successfully';
         res.JSON(error_1.HttpStatus.Ok, (0, response_1.wrapResponse)(result));
     }
