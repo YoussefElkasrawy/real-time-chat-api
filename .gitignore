@@ -13,4 +13,6 @@ scripts/
 push.sh
 tmp
 deprecated.txt
-create-admin.js
+.dist
+dist/
+dist
