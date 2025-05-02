@@ -1,8 +1,9 @@
+import Config, { Env } from '@/config/env';
 import { log } from '@/log';
 import Redis from 'ioredis';
 
 export const redisClient = new Redis({
-  host: 'redis',
+  host: Env.LOCAL == Config.NODE_ENV ? 'localhost' : 'redis',
   port: 6379,
   password: undefined,
   lazyConnect: true, // Prevent auto-connect

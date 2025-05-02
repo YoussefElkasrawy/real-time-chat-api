@@ -22,6 +22,9 @@ function initMiddleware(app: express.Express) {
   app.use(express.json());
   app.use(mongosanitize({ replaceWith: '' }));
   app.use(compression());
+  app.get('/health', (_, res) => {
+    res.status(200).json({ message: 'Server is healthy' });
+  });
   app.use((_: Request, res: Response, next: NextFunction) => {
     res.JSON = (code: HttpStatus, data?: unknown) => {
       res.status(code).json(data);
