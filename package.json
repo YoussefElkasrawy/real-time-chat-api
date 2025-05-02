@@ -9,6 +9,7 @@
     "log": "pm2 logs chatapp",
     "kill": "pm2 delete chatapp",
     "start": "node ./dist/src/index.js",
+    "start:ts": "ts-node -r tsconfig-paths/register ./src/index.ts",
     "start:prod-ab": "pm2 delete chatapp; authbind --deep pm2 start ./dist/src/index.js --name chatapp",
     "start:prod": "pm2 delete chatapp; pm2 start ./dist/src/index.js --name chatapp",
     "start:dev": "nodemon"

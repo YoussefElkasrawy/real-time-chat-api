@@ -1,23 +1,22 @@
-FROM node:20-alpine
+# Use official Node.js image
+FROM node:20
 
+# Set working directory
 WORKDIR /app
 
-# 1. Copy package files first (better caching)
+# Copy package files and tsconfig
 COPY package*.json ./
+COPY tsconfig.json ./
 COPY .env ./
 
-# 2. Install production deps
-RUN npm install --omit=dev
+# Install dependencies (including ts-node)
+RUN npm install
 
-# 3. Create target directory explicitly
-RUN mkdir -p /app/dist
+# Copy the rest of the app
+COPY . .
 
-# 4. Copy using relative path (Windows compatible)
-COPY dist /app/dist/
-
-# 5. Verify files were copied
-RUN ls -la /app/dist/src
-
+# Expose port (change if needed)
 EXPOSE 3000
 
-CMD ["node", "./dist/src/index.js"]
+# Start the app using ts-node
+CMD ["npm", "run", "start:ts"]
