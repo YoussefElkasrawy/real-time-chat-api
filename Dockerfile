@@ -1,40 +1,22 @@
-# Stage 1: Builder - Creates the dist folder
-FROM node:20-alpine AS builder
-
-WORKDIR /build
-
-# 1. Copy all files needed for build
-COPY package*.json ./
-COPY .env ./
-COPY src ./src
-COPY tsconfig.json ./
-
-# 2. Install ALL dependencies (including devDependencies)
-RUN npm install --include=dev
-
-# 3. Build the project
-RUN npm run build
-
-# 4. Verify dist was created
-RUN ls -la /build/dist
-
-# Stage 2: Runtime - Production image
 FROM node:20-alpine
 
 WORKDIR /app
 
-# 1. Copy only production files
+# 1. Copy package files first (better caching)
 COPY package*.json ./
 COPY .env ./
 
-# 2. Install only production dependencies
+# 2. Install production deps
 RUN npm install --omit=dev
 
-# 3. Copy pre-built dist from builder
-COPY --from=builder /build/dist ./dist
+# 3. Create target directory explicitly
+RUN mkdir -p /app/dist
 
-# 4. Verify copy worked
-RUN ls -la /app/dist
+# 4. Copy using relative path (Windows compatible)
+COPY dist /app/dist/
+
+# 5. Verify files were copied
+RUN ls -la /app/dist/src
 
 EXPOSE 3000
 

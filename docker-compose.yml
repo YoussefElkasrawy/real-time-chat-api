@@ -4,39 +4,19 @@ services:
   app:
     build:
       context: .
-      target: builder # First build the builder stage
-    image: real-time-chat
-    container_name: chat-app
+      dockerfile: Dockerfile
+    container_name: chatapp
     ports:
       - '3000:3000'
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-    volumes:
-      - ./dist:/app/dist # Only for development
     depends_on:
-      - mongo
       - redis
-
-  mongo:
-    image: mongo:6
-    container_name: chat-mongo
-    ports:
-      - '27017:27017'
-    volumes:
-      - mongo_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    env_file:
+      - .env
+    restart: always
 
   redis:
-    image: redis:7-alpine
+    image: redis:7
     container_name: chat-redis
     ports:
       - '6379:6379'
-    volumes:
-      - redis_data:/data
-
-volumes:
-  mongo_data:
-  redis_data:
+    restart: always
