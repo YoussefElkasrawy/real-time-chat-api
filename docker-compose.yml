@@ -1,9 +1,18 @@
+version: '3.8'
+
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        PORT: ${PORT}
+        NODE_ENV: ${NODE_ENV}
+        MONGODB_URI: ${MONGODB_URI}
+        ACCESS_TOKEN_EXP: ${ACCESS_TOKEN_EXP}
+        ACCESS_TOKEN_KEY: ${ACCESS_TOKEN_KEY}
     container_name: chatapp
     ports:
-      - '3000:3000'
+      - '${PORT}:${PORT}'
     depends_on:
       - redis
     restart: unless-stopped
