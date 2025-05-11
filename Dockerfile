@@ -4,19 +4,18 @@ FROM node:20
 # Set working directory
 WORKDIR /app
 
-# Copy package files and tsconfig
+# Copy only the required files
 COPY package*.json ./
 COPY tsconfig.json ./
-COPY .env ./
 
-# Install dependencies (including ts-node)
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the app
+# Copy app source code
 COPY . .
 
-# Expose port (change if needed)
+# Expose the application port (still needed for container)
 EXPOSE 3000
 
-# Start the app using ts-node
+# Start the app
 CMD ["npm", "run", "start:ts"]

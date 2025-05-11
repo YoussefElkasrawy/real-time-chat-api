@@ -1,0 +1,38 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image with envs
+        run: |
+          docker build \
+            --build-arg PORT=${{ secrets.PORT }} \
+            --build-arg NODE_ENV=${{ secrets.NODE_ENV }} \
+            --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }} \
+            --build-arg ACCESS_TOKEN_EXP=${{ secrets.ACCESS_TOKEN_EXP }} \
+            --build-arg ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }} \
+            -t my-chat-app .
+
+      - name: Run Docker container
+        run: |
+          docker run -d \
+            -p 3000:3000 \
+            -e PORT=${{ secrets.PORT }} \
+            -e NODE_ENV=${{ secrets.NODE_ENV }} \
+            -e MONGODB_URI=${{ secrets.MONGODB_URI }} \
+            -e ACCESS_TOKEN_EXP=${{ secrets.ACCESS_TOKEN_EXP }} \
+            -e ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }} \
+            --name chatapp \
+            my-chat-app
