@@ -15,7 +15,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker image with envs
+      - name: Build Docker image
         run: |
           docker build \
             --build-arg PORT=${{ secrets.PORT }} \
@@ -24,6 +24,7 @@ jobs:
             --build-arg ACCESS_TOKEN_EXP=${{ secrets.ACCESS_TOKEN_EXP }} \
             --build-arg ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }} \
             -t my-chat-app .
+
 
       - name: Run Docker container
         run: |
