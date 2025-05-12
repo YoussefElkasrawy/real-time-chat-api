@@ -36,7 +36,3 @@ jobs:
       - name: Docker Compose Build and Up
         run: |
           docker-compose up --build -d
-
-      - name: pwd
-        run: |
-          pwd

@@ -18,7 +18,3 @@ EXPOSE 3000
 
 # Start the app
 CMD ["npm", "run", "start:ts"]
-
-RUN npm run list
-
-RUN npm run log
