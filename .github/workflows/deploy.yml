@@ -28,7 +28,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /path/to/your/app
+            cd ~
+            rm -r app
+            mkdir app
+            cd app
             git pull origin main
             echo "PORT=${{ secrets.PORT }}" > .env
             echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
